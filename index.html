@@ -145,7 +145,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/03/Chain-of-thought-%E6%A6%82%E8%BF%B01/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/03/Chain-of-Thought-%E6%A6%82%E8%BF%B01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -159,7 +159,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/03/03/Chain-of-thought-%E6%A6%82%E8%BF%B01/" class="post-title-link" itemprop="url">Chain_of_thought_概述1</a>
+            <a href="/2023/03/03/Chain-of-Thought-%E6%A6%82%E8%BF%B01/" class="post-title-link" itemprop="url">Chain of Thought相关论文阅读1</a>
         </h2>
 
         <div class="post-meta">
@@ -170,7 +170,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-03-03 10:18:39 / 修改时间：17:22:32" itemprop="dateCreated datePublished" datetime="2023-03-03T10:18:39+08:00">2023-03-03</time>
+              <time title="创建时间：2023-03-03 10:18:39 / 修改时间：17:42:59" itemprop="dateCreated datePublished" datetime="2023-03-03T10:18:39+08:00">2023-03-03</time>
             </span>
 
           
@@ -184,7 +184,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Chain-of-Thought概述1"><a href="#Chain-of-Thought概述1" class="headerlink" title="Chain of Thought概述1"></a>Chain of Thought概述1</h1><h2 id="Multimodal-Chain-of-Thought-Reasoning-in-Language-Models"><a href="#Multimodal-Chain-of-Thought-Reasoning-in-Language-Models" class="headerlink" title="Multimodal Chain-of-Thought Reasoning in Language Models"></a>Multimodal Chain-of-Thought Reasoning in Language Models</h2><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>目前存在的CoT模型主要研究自然语言问题处理，本文引入了多模态的CoT，即输入方式可以包含文字，图像两种方式；方法是把一个多步问题分解为多个中间推理步骤(rationale,即逻辑依据)；引入方式有两种：</p>
+          <h2 id="Multimodal-Chain-of-Thought-Reasoning-in-Language-Models"><a href="#Multimodal-Chain-of-Thought-Reasoning-in-Language-Models" class="headerlink" title="Multimodal Chain-of-Thought Reasoning in Language Models"></a>Multimodal Chain-of-Thought Reasoning in Language Models</h2><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>目前存在的CoT模型主要研究自然语言问题处理，本文引入了多模态的CoT，即输入方式可以包含文字，图像两种方式；方法是把一个多步问题分解为多个中间推理步骤(rationale,即逻辑依据)；引入方式有两种：</p>
 <p>1.prompting 大语言模型</p>
 <p>2.微调小模型（参数量小于10亿）</p>
 <h6 id="prompting的相关知识"><a href="#prompting的相关知识" class="headerlink" title="prompting的相关知识"></a>prompting的相关知识</h6><p>作者提出，最简单的实现多模态CoT的方法是将多模态输入转化成单模态输入（语言），然后使用LLM即可。例如把图片输入通过caption模型转化成语言，再和原始语言输入联合起来，输入到LLM中。不过这样做的代价是图像描述带来的信息损失，从而导致在不同模态的表示空间中缺乏相互协同。</p>
@@ -195,14 +195,14 @@
 <p>优化演示参考部分的主要发现包括：一是不同的人类书写者的演示会导致明显的准确性差异；二是如果过推理链中有错误的话，效果会明显降低；三是探索出演示问题的分类，并且形成Auto-CoT，将问题进行聚类，再从每个类别中寻找一个有代表性的问题利用Zero-Shot-CoT生成推理链；最后是利用强化学习和基于复杂度的选择策略来挑选有效的演示。</p>
 <p>优化推理链部分：比较明显的方法是问题分解，即将一个大问题分解成多个子问题并依次解决；另一方式是将推理的过程建模形成一个程序（program-of-thoughts），引导LLM执行程序来生成结果；另一方式是对目标问题生成多个推理路径，从而投票选出最优结果。</p>
 <h5 id="微调模型的CoT推理"><a href="#微调模型的CoT推理" class="headerlink" title="微调模型的CoT推理"></a>微调模型的CoT推理</h5><p>之前有研究尝试使用带CoT注释的大规模数据集对T5模型进行微调，但是实际表现出来模型对于生成答案之前的推理无法加强，只能用于生成答案之后的解释部分。另有人在生成CoT的教师模型里尝试微调学生模型，结果在算术、符号等方面有了一定提高。</p>
-<h5 id="多模态CoT的挑战"><a href="#多模态CoT的挑战" class="headerlink" title="多模态CoT的挑战"></a>多模态CoT的挑战</h5><p>首先发现引入思维链（无论是推测还是解释）都会降低精确度。</p>
+<h3 id="多模态CoT的挑战"><a href="#多模态CoT的挑战" class="headerlink" title="多模态CoT的挑战"></a>多模态CoT的挑战</h3><p>首先发现引入思维链（无论是推测还是解释）都会降低精确度。</p>
 <p>其次发现由于缺乏对视觉特征的认知，模型容易产生一定幻觉（与视觉特征不符的依据）</p>
 <p>因此作者选择将图像输入DETR模型以提取视觉特征，然后和编码的语言表示联合，从而放入解码器得到推理依据和结果。</p>
-<h5 id="多模态CoT的模型"><a href="#多模态CoT的模型" class="headerlink" title="多模态CoT的模型"></a>多模态CoT的模型</h5><p><img src="C:\Users\Clarence\AppData\Roaming\Typora\typora-user-images\image-20230303170503645.png" alt="image-20230303170503645"></p>
+<h3 id="多模态CoT的模型"><a href="#多模态CoT的模型" class="headerlink" title="多模态CoT的模型"></a>多模态CoT的模型</h3><p><img src="/2023/03/03/Chain-of-Thought-%E6%A6%82%E8%BF%B01/Chain-of-Thought-%E6%A6%82%E8%BF%B01%5C1.bmp" alt="1"></p>
 <p>模型分为两部分，逻辑依据获取和答案推断。通过DETR模型提取到视觉特征，和文本信息联合起来获取到逻辑依据；将逻辑依据和原始文本信息结合形成新的文本信息，联合原始视觉特征从而获取到结果。因此，对于逻辑依据获取和答案推断两部分的模型而言，其模型架构是一样的。</p>
 <p>模型依然使用transformer，其伪代码如下：</p>
-<p><img src="C:\Users\Clarence\AppData\Roaming\Typora\typora-user-images\image-20230303171851136.png" alt="image-20230303171851136"></p>
-<h5 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h5><p>基于ScienceQA的数据集，本文的方法取得了91.68%的准确度，仅用了770M参数，比GPT3.5（参数量175B）高了16%。</p>
+<p>!<img src="/2023/03/03/Chain-of-Thought-%E6%A6%82%E8%BF%B01/Chain-of-Thought-%E6%A6%82%E8%BF%B01%5C2.bmp" alt="2"></p>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p>基于ScienceQA的数据集，本文的方法取得了91.68%的准确度，仅用了770M参数，比GPT3.5（参数量175B）高了16%。</p>
 
       
     </div>
