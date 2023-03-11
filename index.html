@@ -145,6 +145,87 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/11/Chain-of-Thought-%E6%A6%82%E8%BF%B02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CYin的个人博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/03/11/Chain-of-Thought-%E6%A6%82%E8%BF%B02/" class="post-title-link" itemprop="url">Chain-of-Thought-概述2</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-03-11 14:09:53 / 修改时间：16:07:48" itemprop="dateCreated datePublished" datetime="2023-03-11T14:09:53+08:00">2023-03-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Language-is-not-all-you-Need-Aligning-Perception-with-Language-Models"><a href="#Language-is-not-all-you-Need-Aligning-Perception-with-Language-Models" class="headerlink" title="Language is not all you Need: Aligning Perception with Language Models"></a>Language is not all you Need: Aligning Perception with Language Models</h1><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>本文提出了KOSMOS-1，一个多模态大语言模型。该模型通过web规模的多模态信息库，包括任意交错的文本图像信息、图像文本对和文本数据进行训练。本文在zero-shot，few-shot，多模态CoT等任务进行测试。结果表明模型在语言理解、生成以及无OCR的NLP任务中，在感知-语言任务中(例如VQA和caption)，在视觉任务中(如通过文本描述来实现视觉识别)取得了比较好的成果。同时证明了多模态大语言模型可以在跨模态迁移中得到收益。最后本文作者称引入了新的数据集Raven IQ test用于判断多模态大语言模型的非语言推理能力。</p>
+<h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>大语言模型已经在自然语言相关任务取得比较大的进展，但在处理多模态任务仍然存在许多问题。</p>
+<p>本文提出的KOSMOS-1能够感知通用模态，遵从指令并在上下文中学习。训练过程参考METALM模型(Language Models are General-Purpose Interfaces,提出半因果的语言建模目标，联合预训练接口和编码器模块，从而将语言模型作为各种各种基础模型的通用接口，利用不同的编码器感知不同的模式信息。在模型设计上，总结归纳了因果建模和非因果建模的优点，并结合二者进行半因果建模)，使用基于transformer的语言模型作为通用接口，然后将多模态的感知模块与语言模型进行对接。</p>
+<p>本实验的主要发现包括</p>
+<ol>
+<li>KOSMOS-1模型能处理各种感知任务</li>
+<li>跨模态知识有利于模型进行非语言推理，即常识推理任务</li>
+<li>将语言模型作为通用接口对于处理感知任务有很大帮助</li>
+</ol>
+<h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><p>KOSMOS-1的网络基本骨架是一个基于transformer的因果语言模型，它本身只是文本模型，对于其它模态的感知是后续训练中嵌入到模型中的。transformer解码器作为通用接口来接受多模态输入。</p>
+<h5 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h5><p>本文采用了一个通用的输入模式。基于输入采用embedding映射模块来讲文本和多模态信息转化为向量形式：文本采用lookup table进行映射，而图像信息则在本文中采用的是视觉编码器。</p>
+<h5 id="处理"><a href="#处理" class="headerlink" title="处理"></a>处理</h5><p>获取到向量映射之后，向量将被输入至基于transformer的因果语言模型中，该模型基于自回归方式生成序列，即过去时间的情况来生成下一个词。<u>因果mask（causal mask）用于遮蔽未来的信息(不太理解这句话，需要进一步学习)。</u>最后交由SoftMax层生成句子。</p>
+<p>本实验模型采用了两种特殊优化：</p>
+<ol>
+<li>MAGNETO： transformer变体，可以在扩展模型大小时提高稳定性</li>
+<li>xPos： 利用相对位置编码进行更好的上下文建模</li>
+</ol>
+<h5 id="训练细节"><a href="#训练细节" class="headerlink" title="训练细节"></a>训练细节</h5><p>训练目标是最大化tokens的对数似然。</p>
+<p>本文使用的视觉编码器是CLIP预训练模型，并且冻结了除最后一层外的所有参数。</p>
+<h3 id="模型效果"><a href="#模型效果" class="headerlink" title="模型效果"></a>模型效果</h3><p>模型在其它任务的效果就不再赘述了，主要关注IQ test非语言推理能力。</p>
+<p><img src="/2023/03/11/Chain-of-Thought-%E6%A6%82%E8%BF%B02/work\Blog\source_posts\Chain-of-Thought-概述2\1.bmp" alt="1"></p>
+<p>这一任务可以用于测试模型非语言上下文的推理能力，模型通过选择最大化概率候选来得到结果。</p>
+<p>实际测试结果正确率为22%左右，而baseline为17%，提高5%。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/03/Chain-of-Thought-%E6%A6%82%E8%BF%B01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -354,7 +435,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
